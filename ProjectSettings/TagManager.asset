@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Enemy Spawn
+  - Item Spawn
+  - Ground Cell
+  - Obstacle
+  - Enemy
+  - Exit
+  - Wall
+  - FxTemporaire
+  - Item
+  - Outer Wall
+  - Weapon
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Card
+  - Ally
+  - Enemy
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 548162949
+    locked: 0
+  - name: Characters
+    uniqueID: 223935015
+    locked: 0
+  - name: UI
+    uniqueID: 4018113369
+    locked: 0
+  - name: Cards
+    uniqueID: 1437447475
+    locked: 0
+  - name: Topmost
+    uniqueID: 221337439
+    locked: 0

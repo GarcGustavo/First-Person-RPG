@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd0b55f113f68d241b3b0d669e2cb94d, type: 3}
+  m_Name: GridPlayer
+  m_EditorClassIdentifier: 
+  unitName: unit
+  unitDesc: description
+  currentDirection: 0
+  centerOffset: {x: 0.5, y: 1, z: 0.5}
+  currentCell: {x: 31, y: 24, z: 0}
+  health: 100
+  mana: 100
+  exp: 0
+  maxHealth: 100
+  maxMana: 100
+  level: 1
+  strength: 1
+  intelligence: 1
+  agility: 3
+  luck: 1
+  alive: 0
+  fighting: 0
+  exploring: 0
+  spawned: 0
+  stunned: 0
+  poisoned: 0
+  confused: 0
+  rage: 0
+  frozen: 0
+  skills:
+  - {fileID: 11400000, guid: 2ed81e525d698f54fbf74f26d5b93828, type: 2}
+  - {fileID: 11400000, guid: 9f25d22acf9b558499c876afbd728538, type: 2}
+  - {fileID: 11400000, guid: e67f395a5356d8f4fb2f7076b137043b, type: 2}
+  inventory: []
+  weapon: {fileID: 0}

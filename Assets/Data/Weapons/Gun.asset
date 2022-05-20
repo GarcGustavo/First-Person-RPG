@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fec68657389740a1941ae790bb2321e2, type: 3}
+  m_Name: Gun
+  m_EditorClassIdentifier: 
+  display: {fileID: 122270308930760723, guid: 78efd9dd53af23d409ae9ea3e2832823, type: 3}
+  vfx: {fileID: 2427786012956944611, guid: da0de216ad60c5d46a6b049d61961615, type: 3}
+  sfx:
+  - {fileID: 0}
+  weaponName: gun
+  description: Shoots bullets at very high speeds.
+  dmg: 10
+  mp: 0
+  range: 3
+  elementType: 3

@@ -18,7 +18,6 @@ namespace Base_Classes
 		public Transform _wiggleDir;
 		
 		private Vector3[] _segmentV;
-
 		private void Start()
 		{
 			_lineRenderer.positionCount = _length;

@@ -11,6 +11,7 @@ namespace Base_Classes
 	{
         //Singleton
         private GameManager _manager;
+        private UIManager _uiManager;
         
         private GridUnit gridUnit;
         private float speed;
@@ -30,6 +31,7 @@ namespace Base_Classes
         private void InitializeUnitMovement()
         {
             //Debug.Log("Initializing grid");
+            _uiManager = UIManager.GetInstance();
             gridUnit = transform.GetComponent<GridUnit>();
             speed = _speed;
             turnSpeed = _turnSpeed;
@@ -44,6 +46,7 @@ namespace Base_Classes
         public IEnumerator MoveToCell()
         {
             //var origin = new Vector3Int(0, 0, 0);
+            yield return new WaitForSeconds(.05f);
             var playerPosition = _manager.GetPlayer()._currentCell;
             var neighborCells = new List<Vector3Int>
             {

@@ -12,7 +12,7 @@ namespace PlayerComponents
     {
         //Singletons and components
         private GameManager _playerManager;
-        private UIManager _uiManager;
+        private UIManager _playerUIManager;
         private Camera _cam;
         private Player _player;
         
@@ -21,7 +21,7 @@ namespace PlayerComponents
         private Vector3Int _targetCell;
         private Vector3Int _currentCell;
         private GameManager.Direction _currentDirection;
-        
+
         private const float _speed = 4f;
         private const float _turnSpeed = 4f;
         private const float _headBob = 0.1f;
@@ -34,7 +34,7 @@ namespace PlayerComponents
         void Start()
         {
             _playerManager = GameManager.GetInstance();
-            _uiManager = UIManager.GetInstance();
+            _playerUIManager = UIManager.GetInstance();
             _cam = Camera.main;
             _playerManager.initializeMovementGrid.AddListener(InitializeMovement);
             //InitializeMovement();
@@ -59,7 +59,7 @@ namespace PlayerComponents
             _player._currentCell = _currentCell;
             _player._currentDirection = _currentDirection;
             //_playerManager.playerMoved.Invoke();
-            _uiManager.UpdateCell();
+            _playerUIManager.UpdateCell();
         }
 
         public void GetMovementInput()
@@ -86,7 +86,6 @@ namespace PlayerComponents
                 _currentDirection = (GameManager.Direction) direction;
                 _player._currentDirection = _currentDirection;
                 //Debug.Log("Direction: " + _currentDirection);
-
                 _isMoving = true;
                 StartCoroutine(RotatePlayer(Vector3.down * 90));
             }
@@ -97,7 +96,6 @@ namespace PlayerComponents
                 _currentDirection = (GameManager.Direction) direction;
                 _player._currentDirection = _currentDirection;
                 //Debug.Log("Direction: " + _currentDirection);
-                
                 _isMoving = true;
                 StartCoroutine(RotatePlayer(Vector3.up * 90));
             }
@@ -127,7 +125,8 @@ namespace PlayerComponents
             {
                 //_playerManager.playerAttack.Invoke(attackTargetCell, _player.weapon);
                 _player.ActiveWeapon?.Attack(attackTargetCell);
-                yield return new WaitForSeconds(.2f);
+                _playerUIManager.LogAction.Invoke("Attacked cell " + attackTargetCell.x + ", " + attackTargetCell.y);
+                yield return new WaitForSeconds(_playerManager._turnCD);
                 _playerManager.UpdateTurn();
                 _isMoving = false;
             }
@@ -147,7 +146,8 @@ namespace PlayerComponents
             var cell = _playerManager.GetDungeonCell(_targetCell);
             StartCoroutine(CheckCell(cell));
             UpdatePlayerPosition();
-            yield return new WaitForSeconds(.2f);
+            _playerUIManager.LogAction.Invoke("Moved to cell " + _currentCell.x + ", " + _currentCell.y);
+            yield return new WaitForSeconds(_playerManager._turnCD);
             _playerManager.UpdateTurn();
             _isMoving = false;
         }

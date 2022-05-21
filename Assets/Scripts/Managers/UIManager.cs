@@ -12,6 +12,8 @@ using UnityEngine.Rendering;
 using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
+	[SerializeField] private CombatLog _combatLog;
+	[SerializeField] private TMP_Text _nextLog;
 	[SerializeField] private TMP_Text turnCounter;
 	[SerializeField] private TMP_Text currentCell;
 	[SerializeField] private TMP_Text hp;
@@ -31,6 +33,8 @@ public class UIManager : MonoBehaviour
 
 	//Singleton Setup
 	private static UIManager _instance;
+	[DoNotSerialize] public UnityEvent<string> LogAction;
+
 	private void Awake()
 	{
 		if (_instance == null)

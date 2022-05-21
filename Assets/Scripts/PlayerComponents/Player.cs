@@ -131,6 +131,7 @@ namespace PlayerComponents
             //_cam.DOShakePosition(strength: 0.1f, duration: 2f, randomness: 45f, vibrato: 45, fadeOut: true);
             _alive = false;
             _manager.playerDeath.Invoke();
+            _uiManager.LogAction.Invoke(_data.name + " takes"+ dmg +" damage!");
             //gameObject.SetActive(_alive);
             //cam.gameObject.SetActive(true);
         }

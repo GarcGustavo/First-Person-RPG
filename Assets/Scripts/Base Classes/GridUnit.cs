@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Base_Classes
 {
-	public class GridUnit : MonoBehaviour
+	public abstract class GridUnit : MonoBehaviour
 	{
 		//Initial Values
 		//[SerializeField] private UnitData _unitData;

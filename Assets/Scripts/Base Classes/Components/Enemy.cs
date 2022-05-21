@@ -16,6 +16,7 @@ namespace Base_Classes
 	{
 		[SerializeField] private EnemyData _data;
 		private GameManager _manager;
+		private UIManager _uiManager;
 		private UnitGridMovement _unitGrid;
 		private Player _player;
 		public float _maxHealth;
@@ -64,7 +65,7 @@ namespace Base_Classes
 			//Status Info
 			//_spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 			//_spriteRenderer.sprite = _data.unitSprite;
-			
+			_uiManager = UIManager.GetInstance();
 			_unitName = _data.unitName;
 			_unitDesc = _data.unitDesc;
 			_health = _data.health;
@@ -105,6 +106,7 @@ namespace Base_Classes
 			if (_currentCell == unitCell)
 			{
 				AttackFeedbacks?.PlayFeedbacks();
+				_uiManager.LogAction.Invoke(_data.name + " attacks!");
 				_manager.playerDamage.Invoke(dmg);
 				//_manager.GetPlayer().Damage(dmg);
 			}

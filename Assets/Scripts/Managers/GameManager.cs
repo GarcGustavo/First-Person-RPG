@@ -82,7 +82,9 @@ public class GameManager : MonoBehaviour
     
     // -------------------------Singleton Setup-------------------------
     private static GameManager _instance;
-    
+    public float _turnCD = .2f;
+    private bool _enemyMoving = false;
+
     public static GameManager GetInstance()
     {
         return _instance;
@@ -118,19 +120,30 @@ public class GameManager : MonoBehaviour
         switch (activeTurn)
         {
             case turnState.Player:
-                if (player.ActionPoints > 0) _movementGrid.GetMovementInput();
+                if (player.ActionPoints > 0 && !_enemyMoving) _movementGrid.GetMovementInput();
                 break;
             case turnState.Enemy:
-                foreach (var enemy in enemies)
+                if (!_enemyMoving)
                 {
-                    enemy.EnemyAction();
+                    foreach (var enemy in enemies)
+                    {
+                        enemy.EnemyAction();
+                    }
+                    enemyTurn.Invoke();
+                    UpdateTurn();
+                    StartCoroutine(EnemyTurnDelay());
                 }
-                enemyTurn.Invoke();
-                UpdateTurn();
                 break;
         }
     }
-    
+
+    private IEnumerator EnemyTurnDelay()
+    {
+        _enemyMoving = true;
+        yield return new WaitForSeconds(.2f);
+        _enemyMoving = false;
+    }
+
     // -------------------------Initializers-------------------------
 
     void StartGame()
@@ -286,7 +299,8 @@ public class GameManager : MonoBehaviour
                 player.ActionPoints -= 1;
                 if (player.ActionPoints <= 0)
                 {
-                    Debug.Log("Enemy turn");
+                    //Debug.Log("Enemy turn");
+                    uiManager.LogAction.Invoke("Enemy turn");
                     activeTurn = turnState.Enemy;
                     turnCounter++;
                 }
@@ -297,7 +311,8 @@ public class GameManager : MonoBehaviour
             case turnState.Enemy:
             {
                 player.ActionPoints = player._agility;
-                Debug.Log("Player turn");
+                //Debug.Log("Player turn");
+                uiManager.LogAction.Invoke("Player turn");
                 activeTurn = turnState.Player;
                 newTurn.Invoke();
                 break;

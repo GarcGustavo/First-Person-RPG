@@ -5,6 +5,7 @@ using PlayerComponents;
 using Scriptable_Objects;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 namespace Base_Classes
 {
@@ -13,6 +14,7 @@ namespace Base_Classes
 		[SerializeField] private ItemData _data;
 		[SerializeField] private Sprite itemHUD;
 		[SerializeField] private Sprite itemSprite;
+		[SerializeField] private SpriteRenderer _worldDisplay;
 		private GameManager _manager;
 		private InventoryManager _inventoryManager;
 		private UIManager _uiManager;
@@ -24,32 +26,35 @@ namespace Base_Classes
 			_uiManager = UIManager.GetInstance();
 			_inventoryManager = InventoryManager.GetInstance();
 			_manager.pickUpItem.AddListener(PickUp);
-			GetComponentInChildren<SpriteRenderer>().sprite = itemSprite;
+			_worldDisplay = GetComponentInChildren<SpriteRenderer>();
+			_worldDisplay.sprite = itemSprite;
 		}
 		private void PickUp(GridCell cell)
 		{
+			Debug.Log(_data.name + " attempt to pickup");
+			Debug.Log(cell.gridPosition + " at cell");
+			
 			if (cell.gridPosition != _currentCell) return;
-			
-			if (_data != null)
-			{
-				if (_data.itemType == ItemData.ItemType.Consumable) return;
+			Debug.Log(_data.name + " attempt to pickup2222");
+			if (_data.itemType == ItemData.ItemType.Consumable)
 				Consume();
-				if (_data.itemType == ItemData.ItemType.Equipment) return;
+			if (_data.itemType == ItemData.ItemType.Equipment)
 				_inventoryManager.items.Add(_data);
-				Debug.Log(_data.name + " added to inventory");
-			}
+			Debug.Log(_data.name + " added to inventory");
 			
-			gameObject.SetActive(false);
+			//_worldDisplay.sprite = null;
+			_worldDisplay.gameObject.SetActive(false);
 		}
 		private void Consume()
 		{
 			if (_data.consumableType == ItemData.ConsumableType.Heal)
 			{
 				Debug.Log(_data.name + " added to inventory");
-				_player.Heal(1f);
+				_manager.GetPlayer().Heal(1f);
 			}
 			
-			gameObject.SetActive(false);
+			//_worldDisplay.sprite = null;
+			_worldDisplay.gameObject.SetActive(false);
 		}
 	}
 }

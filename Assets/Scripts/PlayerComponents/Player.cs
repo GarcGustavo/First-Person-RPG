@@ -65,8 +65,12 @@ namespace PlayerComponents
             //_manager.playerPickUp.AddListener(PickUpWeapon);
             _alive = true;
         }
-        public void InitializeUnit()
+        public override void InitializeUnit(GridCell cell)
         {
+            _data.currentCell = cell.gridPosition;
+            cell.Occupy(this);
+            _initialCell = cell.gridPosition;
+            _currentCell = cell.gridPosition;
             //Debug.Log("Initializing unit " + name);
             //Status Info
             _unitName = _data.unitName;
@@ -110,6 +114,7 @@ namespace PlayerComponents
         }
         public void Heal(float hp)
         {
+            _uiManager.LogAction.Invoke(_data.name + " healed "+ hp +" hp");
             _health += hp;
             _healFeedbacks?.PlayFeedbacks();
             //_cam.DOShakePosition(strength: 0.1f, duration: .2f, randomness: 45f, vibrato: 45, fadeOut: true);
@@ -121,19 +126,17 @@ namespace PlayerComponents
             //gameObject.SetActive(_alive);
             //cam.gameObject.SetActive(true);
         }
-        public void Damage(float dmg)
+
+        private void Damage(float dmg)
         {
+            _uiManager.LogAction.Invoke(_data.name + " takes"+ dmg +" damage!");
             _health -= dmg;
-            _damageFeedbacks?.PlayFeedbacks();
             _cam.DOShakePosition(strength: 0.1f, duration: .2f, randomness: 45f, vibrato: 45, fadeOut: true);
-            //_cam.transform.DOLocalMove(Vector3.zero, .1f, false);
+            _damageFeedbacks?.PlayFeedbacks();
             if (!(_health <= 0)) return;
-            //_cam.DOShakePosition(strength: 0.1f, duration: 2f, randomness: 45f, vibrato: 45, fadeOut: true);
+            _health = 0;
             _alive = false;
             _manager.playerDeath.Invoke();
-            _uiManager.LogAction.Invoke(_data.name + " takes"+ dmg +" damage!");
-            //gameObject.SetActive(_alive);
-            //cam.gameObject.SetActive(true);
         }
         private void PickUpWeapon(WeaponData newWeapon)
         {

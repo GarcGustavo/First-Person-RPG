@@ -8,9 +8,9 @@ namespace Base_Classes
 		{
 			//InitializeUnit();
 		}
-		public void InitializeUnit()
+		public override void InitializeUnit(GridCell cell)
 		{
-			//Debug.Log("Initializing wall");
+			cell.Occupy(this);
 		}
 		
 		

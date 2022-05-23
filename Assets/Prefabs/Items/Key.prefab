@@ -1,5 +1,26 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &8893882577189698397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2020751938084211225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5778a9e37be4421b997d91e1cd5724ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _unitName: unit
+  _unitDesc: description
+  _spriteRenderer: {fileID: 0}
+  _currentDirection: 0
+  _initialCell: {x: 0, y: 0, z: 0}
+  _currentCell: {x: 0, y: 0, z: 0}
+  _centerOffset: {x: 0, y: 0, z: 0}
+  _keyNumber: 0
+  _worldDisplay: {fileID: 2020751937475893832}
 --- !u!1001 &5068911597075122014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11,7 +32,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 4ff953647bed18b418fadd55a202ceaa,
+      objectReference: {fileID: 21300000, guid: 333c0c752dcc62842a03a809f5db00af,
         type: 3}
     - target: {fileID: 6508619638269824326, guid: a6178bbbebe894641b525239147efb52,
         type: 3}
@@ -73,6 +94,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Key
       objectReference: {fileID: 0}
+    - target: {fileID: 6508619638269824327, guid: a6178bbbebe894641b525239147efb52,
+        type: 3}
+      propertyPath: m_TagString
+      value: Key
+      objectReference: {fileID: 0}
     - target: {fileID: 6508619638269824329, guid: a6178bbbebe894641b525239147efb52,
         type: 3}
       propertyPath: itemHUD
@@ -85,5 +111,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 4ff953647bed18b418fadd55a202ceaa,
         type: 3}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6508619638269824329, guid: a6178bbbebe894641b525239147efb52, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a6178bbbebe894641b525239147efb52, type: 3}
+--- !u!1 &2020751938084211225 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6508619638269824327, guid: a6178bbbebe894641b525239147efb52,
+    type: 3}
+  m_PrefabInstance: {fileID: 5068911597075122014}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &2020751937475893832 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6508619637543640342, guid: a6178bbbebe894641b525239147efb52,
+    type: 3}
+  m_PrefabInstance: {fileID: 5068911597075122014}
+  m_PrefabAsset: {fileID: 0}

@@ -20,12 +20,6 @@ namespace Base_Classes
 		public Vector3Int _initialCell;
 		public Vector3Int _currentCell;
 		public Vector3 _centerOffset;
-		//public void InitializeUnit()
-		//{
-			//Debug.Log("Initializing unit " + name);
-			//_currentDirection = GameManager.Direction.North;
-			//_spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-			//_spriteRenderer.sprite = _unitData.unitSprite;
-		//}
+		public abstract void InitializeUnit(GridCell cell);
 	}
 }

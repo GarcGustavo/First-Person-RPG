@@ -15,8 +15,11 @@ namespace PlayerComponents
 		private UIManager _uiManager;
 		private SpriteRenderer _worldDisplay;
 
-		public void InitializeUnit()
+		public override void InitializeUnit(GridCell cell)
 		{
+			_initialCell = cell.gridPosition;
+			_currentCell = cell.gridPosition;
+			cell.Occupy(this);
 			_manager = GameManager.GetInstance();
 			_uiManager = UIManager.GetInstance();
 			_manager.pickUpItem.AddListener(PickUp);

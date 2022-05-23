@@ -17,7 +17,7 @@ namespace Base_Classes
 		[SerializeField] private EnemyData _data;
 		private GameManager _manager;
 		private UIManager _uiManager;
-		private UnitGridMovement _unitGrid;
+		public UnitGridMovement _unitGrid;
 		private Player _player;
 		public float _maxHealth;
 		public float _health;
@@ -59,20 +59,22 @@ namespace Base_Classes
 			LookAtCamera();
 		}
 
-		public void InitializeUnit()
+		public override void InitializeUnit(GridCell cell)
 		{
-			//Debug.Log("Initializing unit " + name);
-			//Status Info
-			//_spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-			//_spriteRenderer.sprite = _data.unitSprite;
+			cell.Occupy(this);
+			_initialCell = cell.gridPosition;
+			_currentCell = cell.gridPosition;
+			_currentDirection = GameManager.Direction.North;
+			_alive = true;
+			
 			_uiManager = UIManager.GetInstance();
+			_unitGrid = GetComponent<UnitGridMovement>();
+			//Stats
 			_unitName = _data.unitName;
 			_unitDesc = _data.unitDesc;
 			_health = _data.health;
 			_maxHealth = _data.maxHealth;
-			//Stats
 			_level = _data.level;
-			//Flags
 			_alive = true;
 			_fighting = false;
 			_exploring = true;
@@ -83,33 +85,27 @@ namespace Base_Classes
 			_confused = false;
 			_rage = false;
 			_frozen = false;
-			//_deathVFX = _data.deathVFX.GetComponent<ParticleSystem>();
-			//_deathVFX = GetComponentInChildren<ParticleSystem>();
 
-			_unitGrid = GetComponent<UnitGridMovement>();
 			hpBar.UpdateBar(_health, 0, _maxHealth, _alive);
 		}
 
 		public void EnemyAction()
 		{
-			//Move towards player position
+			//Moves towards player position
 			if (_manager.turnCounter > 1 && gameObject.activeSelf)
 			{
-				StartCoroutine(_unitGrid.MoveToCell());
+				_unitGrid.CheckCell();
 			}
 		}
-		public void Attack(Vector3Int unitCell, float dmg)
+
+		private void Attack(Vector3Int unitCell, float dmg)
 		{
-			//var damage = weaponData.dmg;
-			//Debug.Log("Enemy attacks: " + target + " for: " + dmg);
-			//_manager.unitDamage.Invoke(target, dmg);
-			if (_currentCell == unitCell)
-			{
-				AttackFeedbacks?.PlayFeedbacks();
-				_uiManager.LogAction.Invoke(_data.name + " attacks!");
-				_manager.playerDamage.Invoke(dmg);
-				//_manager.GetPlayer().Damage(dmg);
-			}
+			if (_currentCell != unitCell) return;
+			AttackFeedbacks?.PlayFeedbacks();
+			_uiManager.LogAction.Invoke(_data.name + " attacks!");
+			_manager.playerDamage.Invoke(dmg);
+			//_unitGrid.finishedMoving = true;
+			//_manager.GetPlayer().Damage(dmg);
 		}
 		private void Damage(Vector3Int target, float dmg)
 		{
@@ -131,16 +127,8 @@ namespace Base_Classes
 		{
 			if (_alive)
 			{
-				//StartCoroutine(Rotate(_manager.GetPlayer().transform));
-				//transform.DOLookAt(Camera.main.transform.position, .25f, AxisConstraint.Y, null);
 				transform.LookAt(Camera.main.transform.position);
 			}
-		}
-
-		private IEnumerator Rotate(Transform target)
-		{
-			transform.DOLookAt(target.position, .25f, AxisConstraint.Y, null);
-			yield break;
 		}
 		
 	}

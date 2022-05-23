@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Base_Classes;
+using Base_Classes.Components;
 using DungeonArchitect;
 using DungeonArchitect.Builders.Grid;
 using DungeonArchitect.Builders.GridFlow;
@@ -69,6 +70,7 @@ public class GameManager : MonoBehaviour
     public UnityEvent initializeMovementGrid;
     public UnityEvent endRound;
     public UnityEvent newTurn;
+    public UnityEvent<int> unlockDoor;
     //Player
     public UnityEvent<float> playerDamage;
     public UnityEvent<GridCell> pickUpItem;
@@ -83,7 +85,7 @@ public class GameManager : MonoBehaviour
     // -------------------------Singleton Setup-------------------------
     private static GameManager _instance;
     public float _turnCD = .2f;
-    private bool _enemyMoving = false;
+    private bool _unitMoving = false;
 
     public static GameManager GetInstance()
     {
@@ -115,33 +117,36 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
+        ManageTurns();
+    }
+
+    private void ManageTurns()
+    {
         if (!playerSpawned) return;
         if (!player._alive) return;
         switch (activeTurn)
         {
             case turnState.Player:
-                if (player.ActionPoints > 0 && !_enemyMoving) _movementGrid.GetMovementInput();
+                if (!(player.ActionPoints > 0 && !_unitMoving)) break;
+                _movementGrid.GetMovementInput();
                 break;
             case turnState.Enemy:
-                if (!_enemyMoving)
+                if (_unitMoving) break;
+                foreach (var enemy in enemies)
                 {
-                    foreach (var enemy in enemies)
-                    {
-                        enemy.EnemyAction();
-                    }
-                    enemyTurn.Invoke();
-                    UpdateTurn();
-                    StartCoroutine(EnemyTurnDelay());
+                    enemy.EnemyAction();
+                    enemy._unitGrid.finishedMoving = true;
                 }
+                enemyTurn.Invoke();
+                UpdateTurn();
                 break;
         }
     }
-
-    private IEnumerator EnemyTurnDelay()
+    private IEnumerator TurnDelay()
     {
-        _enemyMoving = true;
-        yield return new WaitForSeconds(.2f);
-        _enemyMoving = false;
+        _unitMoving = true;
+        yield return new WaitForSeconds(_turnCD);
+        _unitMoving = false;
     }
 
     // -------------------------Initializers-------------------------
@@ -193,7 +198,7 @@ public class GameManager : MonoBehaviour
         uiManager.ReloadUI();
         
     }
-    // -------------------------Generators-------------------------
+    // -------------------------Dungeon Methods-------------------------
     private void GenerateNewMap()
     {
         gridCells.Clear();
@@ -220,61 +225,50 @@ public class GameManager : MonoBehaviour
                 case "Player":
                     player = item.GetComponent<Player>();
                     var playerCell = GetDungeonCell(grid.WorldToCell(player.transform.position));
-                    playerData.currentCell = playerCell.gridPosition;
-                    player.InitializeUnit();
-                    playerCell.Occupy(player);
-                    player._initialCell = playerCell.gridPosition;
-                    player._currentCell = playerCell.gridPosition;
-                    player._currentDirection = Direction.North;
-                    playerSpawned = true;
+                    player.InitializeUnit(playerCell);
                     _movementGrid = player.GetComponent<PlayerGridMovement>();
+                    playerSpawned = true;
                     break;
                 case "Enemy":
                     var enemy = item.GetComponent<Enemy>();
                     var enemyCell = GetDungeonCell(grid.WorldToCell(enemy.transform.position));
+                    enemy.InitializeUnit(enemyCell);
                     enemies.Add(enemy);
-                    enemy.InitializeUnit();
-                    enemyCell.Occupy(enemy);
-                    enemy._initialCell = enemyCell.gridPosition;
-                    enemy._currentCell = enemyCell.gridPosition;
-                    enemy._currentDirection = Direction.North;
-                    enemy._alive = true;
                     break;
                 case "Wall":
                     var wall = item.GetComponent<Wall>();
                     var wallCell = GetDungeonCell(grid.WorldToCell(wall.transform.position));
-                    wall.InitializeUnit();
-                    wallCell.Occupy(wall);
+                    wall.InitializeUnit(wallCell);
+                    break;
+                case "Door":
+                    var door = item.GetComponent<Door>();
+                    var doorCell = GetDungeonCell(grid.WorldToCell(door.transform.position));
+                    door.InitializeUnit(doorCell);
                     break;
                 case "Item":
                     var itemDrop = item.GetComponent<Item>();
                     var itemCell = GetDungeonCell(grid.WorldToCell(itemDrop.transform.position));
-                    itemDrop.InitializeUnit();
-                    itemCell.Occupy(itemDrop);
-                    itemDrop._initialCell = itemCell.gridPosition;
-                    itemDrop._currentCell = itemCell.gridPosition;
+                    itemDrop.InitializeUnit(itemCell);
+                    break;
+                case "Key":
+                    var key = item.GetComponent<Key>();
+                    var keyCell = GetDungeonCell(grid.WorldToCell(key.transform.position));
+                    key.InitializeUnit(keyCell);
                     break;
                 case "Weapon":
                     var weaponDrop = item.GetComponent<Weapon>();
                     var weaponCell = GetDungeonCell(grid.WorldToCell(weaponDrop.transform.position));
-                    weaponDrop.InitializeUnit();
-                    weaponCell.Occupy(weaponDrop);
-                    weaponDrop._initialCell = weaponCell.gridPosition;
-                    weaponDrop._currentCell = weaponCell.gridPosition;
+                    weaponDrop.InitializeUnit(weaponCell);
                     break;
                 case "Exit":
                     exit = item.GetComponent<Exit>();
                     var exitCell = GetDungeonCell(grid.WorldToCell(exit.transform.position));
-                    exit.InitializeUnit();
-                    exitCell.Occupy(exit);
-                    exit._initialCell = exitCell.gridPosition;
-                    exit._currentCell = exitCell.gridPosition;
+                    exit.InitializeUnit(exitCell);
                     break;
             }
         }
     }
     
-    // -------------------------GridCell Methods-------------------------
     public GridCell GetDungeonCell(Vector3Int targetPos)
     {
         foreach (var cell in gridCells)
@@ -290,6 +284,7 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+    // -------------------------State Methods-------------------------
     public void UpdateTurn()
     {
         switch (activeTurn)
@@ -304,6 +299,7 @@ public class GameManager : MonoBehaviour
                     activeTurn = turnState.Enemy;
                     turnCounter++;
                 }
+                //StartCoroutine(TurnDelay());
                 newTurn.Invoke();
                 break;
             }
@@ -314,6 +310,7 @@ public class GameManager : MonoBehaviour
                 //Debug.Log("Player turn");
                 uiManager.LogAction.Invoke("Player turn");
                 activeTurn = turnState.Player;
+                //StartCoroutine(TurnDelay());
                 newTurn.Invoke();
                 break;
             }

@@ -21,8 +21,11 @@ namespace Base_Classes
 		{
 			_localManager.endRound.Invoke();
 		}
-		public void InitializeUnit()
+		public override void InitializeUnit(GridCell cell)
 		{
+			_initialCell = cell.gridPosition;
+			_currentCell = cell.gridPosition;
+			cell.Occupy(this);
 			//Debug.Log("Initializing unit " + name);
 		}
 	}

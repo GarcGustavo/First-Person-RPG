@@ -22,6 +22,7 @@ namespace Base_Classes
         private GameManager.Direction currentDirection;
         private float _speed = 4f;
         private float _turnSpeed = 4f;
+        public bool finishedMoving = true;
         
         private void Awake()
         {
@@ -43,10 +44,9 @@ namespace Base_Classes
             UpdateUnitPosition();
         }
     
-        public IEnumerator MoveToCell()
+        public void CheckCell()
         {
             //var origin = new Vector3Int(0, 0, 0);
-            yield return new WaitForSeconds(.05f);
             var playerPosition = _manager.GetPlayer()._currentCell;
             var neighborCells = new List<Vector3Int>
             {
@@ -75,48 +75,46 @@ namespace Base_Classes
             }
 
             var gridCell = _manager.GetDungeonCell(targetCell);
-            var worldPosition = new Vector3Int(gridCell.gridPosition.x,
-                gridCell.gridPosition.z,
-                gridCell.gridPosition.y);
-                
-            if (gridCell.occupant == null)
-            {
-                //Debug.Log("Enemy at:" + currentCell + " is moving to cell: " + targetCell);
-                transform.DOMove(worldPosition + centerOffset, 1 / _speed, false);
-                _manager.GetDungeonCell(currentCell).Free();
-                currentCell = gridCell.gridPosition;
-                gridCell.Occupy(gridUnit);
-                UpdateUnitPosition();
-            }
-            else
-            {
-                var cellTag = gridCell.occupant.tag;
-                //Debug.Log("Target cell is occupied by: " + cellTag);
-                switch (cellTag)
-                {
-                    case "Player":
-                        var attack = 10f;
-                        //transform.DOShakePosition(strength: 0.1f, duration: .2f, randomness: 45f, vibrato: 45, fadeOut: true);
-                        //transform.transform.DOLocalMove(Vector3.zero, .1f, false);
-                        _manager.enemyAttack.Invoke(currentCell, attack);
-                        //_manager.GetEnemy(currentCell).Attack(currentCell, attack);
-                        //yield return new WaitForSeconds(.2f);
-                        //_manager.playerDamage.Invoke(10f);
-                        break;
-                    case "Wall":
-                        //StartCoroutine(UnitAttack(gridCell.gridPosition));
-                        break;
-                    default:
-                        //transform.DOShakePosition(strength: 0.1f, duration: .2f, randomness: 45f, vibrato: 45, fadeOut: true);
-                        //transform.transform.DOLocalMove(Vector3.zero, .1f, false);
-                        break;
-                }
-            }
-            
+            if (!finishedMoving) return;
+            finishedMoving = false;
+            if (gridCell.occupant == null) 
+                MoveToCell(gridCell);
+            else 
+                AttackCell(gridCell);
+
+
             //var cell = _manager.GetDungeonCell(targetCell);
-            yield break;
+            //yield break;
             //yield return new WaitForSeconds(.1f);
             //_manager.UpdateTurn();
+        }
+        private void MoveToCell(GridCell cell)
+        {
+            //Debug.Log("Enemy at:" + currentCell + " is moving to cell: " + targetCell);
+            var worldPosition = new Vector3Int(cell.gridPosition.x,
+                cell.gridPosition.z,
+                cell.gridPosition.y);
+            transform.DOMove(worldPosition + centerOffset, 1 / _speed, false);
+            _manager.GetDungeonCell(currentCell).Free();
+            currentCell = cell.gridPosition;
+            cell.Occupy(gridUnit);
+            UpdateUnitPosition();
+            //finishedMoving = true;
+        }
+        private void AttackCell(GridCell cell)
+        {
+            var cellTag = cell.occupant.tag;
+            switch (cellTag)
+            {
+                case "Player":
+                    var attack = 10f;
+                    _manager.enemyAttack.Invoke(currentCell, attack);
+                    break;
+                default:
+                    //transform.DOShakePosition(strength: 0.1f, duration: .2f, randomness: 45f, vibrato: 45, fadeOut: true);
+                    //transform.DOLocalMove(Vector3.zero, .1f, false);
+                    break;
+            }
         }
 
         private void UpdateUnitPosition()

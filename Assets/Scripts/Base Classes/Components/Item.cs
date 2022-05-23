@@ -20,8 +20,12 @@ namespace Base_Classes
 		private UIManager _uiManager;
 		private Player _player;
 		
-		public void InitializeUnit()
+		public override void InitializeUnit(GridCell cell)
 		{
+			_initialCell = cell.gridPosition;
+			_currentCell = cell.gridPosition;
+			cell.Occupy(this);
+			
 			_manager = GameManager.GetInstance();
 			_uiManager = UIManager.GetInstance();
 			_inventoryManager = InventoryManager.GetInstance();
@@ -31,11 +35,7 @@ namespace Base_Classes
 		}
 		private void PickUp(GridCell cell)
 		{
-			Debug.Log(_data.name + " attempt to pickup");
-			Debug.Log(cell.gridPosition + " at cell");
-			
 			if (cell.gridPosition != _currentCell) return;
-			Debug.Log(_data.name + " attempt to pickup2222");
 			if (_data.itemType == ItemData.ItemType.Consumable)
 				Consume();
 			if (_data.itemType == ItemData.ItemType.Equipment)

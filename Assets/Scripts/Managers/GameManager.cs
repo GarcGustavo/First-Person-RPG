@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
     public UnityEvent playerDeath;
     //Enemy
     public UnityEvent enemyTurn;
-    public UnityEvent<Vector3Int, float> enemyAttack;
+    public UnityEvent<Vector3Int> enemyAttack;
     public UnityEvent<Vector3Int, float> unitDamage;
     public UnityEvent<Vector3Int, float> unitHeal;
     
@@ -283,6 +283,34 @@ public class GameManager : MonoBehaviour
         }
         return null;
     }
+    public List<GridCell> GetNeighborGridCells(Vector3Int grid_cell)
+    {
+        var grid_cell_list = new List<GridCell>();
+        var neighbor_cells = new List<Vector3Int>
+        {
+            grid_cell + Vector3Int.up,
+            grid_cell + Vector3Int.right,
+            grid_cell + Vector3Int.down,
+            grid_cell + Vector3Int.left
+        };
+        foreach (var cell in neighbor_cells)
+        {
+            var next_cell = GetDungeonCell(cell);
+            if(next_cell != null) grid_cell_list.Add(next_cell);
+        }
+        return grid_cell_list;
+    }
+    public List<Vector3Int> GetNeighborCells(Vector3Int grid_cell)
+    {
+        var neighbor_cells = new List<Vector3Int>
+        {
+            grid_cell + Vector3Int.up,
+            grid_cell + Vector3Int.right,
+            grid_cell + Vector3Int.down,
+            grid_cell + Vector3Int.left
+        };
+        return neighbor_cells;
+    }
 
     // -------------------------State Methods-------------------------
     public void UpdateTurn()
@@ -294,7 +322,6 @@ public class GameManager : MonoBehaviour
                 player.ActionPoints -= 1;
                 if (player.ActionPoints <= 0)
                 {
-                    //Debug.Log("Enemy turn");
                     uiManager.LogAction.Invoke("Enemy turn");
                     activeTurn = turnState.Enemy;
                     turnCounter++;
@@ -308,7 +335,7 @@ public class GameManager : MonoBehaviour
             {
                 player.ActionPoints = player._agility;
                 //Debug.Log("Player turn");
-                uiManager.LogAction.Invoke("Player turn");
+                //uiManager.LogAction.Invoke("Player turn");
                 activeTurn = turnState.Player;
                 //StartCoroutine(TurnDelay());
                 newTurn.Invoke();

@@ -165,22 +165,24 @@ namespace PlayerComponents
                             break;
                         case "Item":
                             _playerManager.pickUpItem.Invoke(cell);
-                            transform.DOMove(body_position + _centerOffset, 1 / _speed, false);
+                            transform.DOMove(body_position + _centerOffset,
+                                1 / _speed, false);
                             _playerManager.GetDungeonCell(_currentCell).Free();
                             _currentCell = _targetCell;
                             cell.Occupy(_player);
                             break;
                         case "Key":
                             _playerManager.pickUpItem.Invoke(cell);
-                            transform.DOMove(body_position + _centerOffset, 1 / _speed, false);
+                            transform.DOMove(body_position + _centerOffset,
+                                1 / _speed, false);
                             _playerManager.GetDungeonCell(_currentCell).Free();
                             _currentCell = _targetCell;
                             cell.Occupy(_player);
                             break;
                         case "Weapon":
-                            //Debug.Log("Picked up weapon!");
                             _playerManager.pickUpItem.Invoke(cell);
-                            transform.DOMove(body_position + _centerOffset, 1 / _speed, false);
+                            transform.DOMove(body_position + _centerOffset,
+                                1 / _speed, false);
                             _playerManager.GetDungeonCell(_currentCell).Free();
                             _currentCell = _targetCell;
                             cell.Occupy(_player);

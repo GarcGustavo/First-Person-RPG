@@ -546,9 +546,9 @@ MonoBehaviour:
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   SortingLayerName: UI
-  Delay: 0.2
+  Delay: 0.1
   LerpFrontBar: 1
-  LerpFrontBarSpeed: 3
+  LerpFrontBarSpeed: 4
   LerpDelayedBar: 1
   LerpDelayedBarSpeed: 1
   BumpScaleOnChange: 1
@@ -581,8 +581,8 @@ MonoBehaviour:
   NestDrawnHealthBar: 1
   InstantiatedOnDeath: {fileID: 0}
   HealthBarOffset: {x: 0, y: 0, z: 0}
-  AlwaysVisible: 1
-  DisplayDurationOnHit: 1
+  AlwaysVisible: 0
+  DisplayDurationOnHit: 0.7
   HideBarAtZero: 1
   HideBarAtZeroDelay: 0.5
 --- !u!1 &3850778668304248440
@@ -807,6 +807,7 @@ MonoBehaviour:
   _currentCell: {x: 0, y: 0, z: 0}
   _centerOffset: {x: 0, y: 0, z: 0}
   _data: {fileID: 11400000, guid: 77d8a9025c6dd574c9a3d2944998aacf, type: 2}
+  _unitGrid: {fileID: 0}
   _maxHealth: 100
   _health: 100
   _level: 1
@@ -855,3 +856,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9758e16dbe604b25aa3778b84411616d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  finishedMoving: 1

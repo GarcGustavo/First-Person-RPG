@@ -10,8 +10,10 @@ namespace Scriptable_Objects
 		public float mana = 100;
 		public float exp = 0;
 		//Stats
+		//public float attack = 1;
 		public float maxHealth = 100;
 		public float maxMana = 100;
+		public int attack = 1;
 		//Stats
 		public int level = 1;
 		//Flags

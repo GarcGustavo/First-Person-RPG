@@ -22,6 +22,7 @@ MonoBehaviour:
   exp: 0
   maxHealth: 30
   maxMana: 100
+  attack: 5
   level: 1
   alive: 0
   fighting: 0

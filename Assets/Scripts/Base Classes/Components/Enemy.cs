@@ -48,7 +48,7 @@ namespace Base_Classes
 		{
 			_manager = GameManager.GetInstance();
 			_manager.unitDamage.AddListener(Damage);
-			_manager.enemyTurn.AddListener(EnemyAction);
+			//_manager.enemyTurn.AddListener(EnemyAction);
 			_manager.enemyAttack.AddListener(Attack);
 			//_manager.playerMoved.AddListener(LookAtCamera);
 			//InitializeUnit();
@@ -92,18 +92,18 @@ namespace Base_Classes
 		public void EnemyAction()
 		{
 			//Moves towards player position
-			if (_manager.turnCounter > 1 && gameObject.activeSelf)
+			if (_manager.turnCounter >= 1 && gameObject.activeSelf)
 			{
 				_unitGrid.CheckCell();
 			}
 		}
 
-		private void Attack(Vector3Int unitCell, float dmg)
+		private void Attack(Vector3Int unitCell)
 		{
 			if (_currentCell != unitCell) return;
 			AttackFeedbacks?.PlayFeedbacks();
 			_uiManager.LogAction.Invoke(_data.name + " attacks!");
-			_manager.playerDamage.Invoke(dmg);
+			_manager.playerDamage.Invoke(_data.attack);
 			//_unitGrid.finishedMoving = true;
 			//_manager.GetPlayer().Damage(dmg);
 		}

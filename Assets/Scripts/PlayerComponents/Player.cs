@@ -55,7 +55,6 @@ namespace PlayerComponents
         public Weapon ActiveWeapon { get; set; }
         public Transform WeaponParent { get; set; }
         public int ActionPoints { get; set; }
-        //public PlayerData data;
         private void Start()
         {
             _manager = GameManager.GetInstance();
@@ -71,7 +70,6 @@ namespace PlayerComponents
             cell.Occupy(this);
             _initialCell = cell.gridPosition;
             _currentCell = cell.gridPosition;
-            //Debug.Log("Initializing unit " + name);
             //Status Info
             _unitName = _data.unitName;
             _unitDesc = _data.unitDesc;
@@ -86,8 +84,6 @@ namespace PlayerComponents
             _luck = _data.luck;
             //Movement
             _currentDirection = GameManager.Direction.North;
-            //_initialCell = _data.initialCell;
-            //_currentCell = _data.currentCell;
             _centerOffset = _data.centerOffset;
             //Flags
             _alive = true;
@@ -103,8 +99,6 @@ namespace PlayerComponents
             _cam = Camera.main;
             _particles = GetComponentInChildren<ParticleSystem>();
             ActiveWeapon = null;
-            //ActiveWeapon.InitializeUnit();
-            //Temporary, add to playerdata later
             ActionPoints = _agility;
         }
         
@@ -117,14 +111,9 @@ namespace PlayerComponents
             _uiManager.LogAction.Invoke(_data.name + " healed "+ hp +" hp");
             _health += hp;
             _healFeedbacks?.PlayFeedbacks();
-            //_cam.DOShakePosition(strength: 0.1f, duration: .2f, randomness: 45f, vibrato: 45, fadeOut: true);
-            //_cam.transform.DOLocalMove(Vector3.zero, .1f, false);
             if (!(_health > _maxHealth)) return;
-            //_cam.DOShakePosition(strength: 0.1f, duration: 2f, randomness: 45f, vibrato: 45, fadeOut: true);
             _health = _maxHealth;
             _manager.playerHeal.Invoke();
-            //gameObject.SetActive(_alive);
-            //cam.gameObject.SetActive(true);
         }
 
         private void Damage(float dmg)

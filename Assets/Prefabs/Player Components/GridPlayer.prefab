@@ -42,6 +42,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c5b6b58e93e08c4eb656816d8308c43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  finishedMoving: 1
+  _distance: 0
 --- !u!45 &399828440430584893
 Skybox:
   m_ObjectHideFlags: 0
@@ -561,6 +563,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 5ce8f40291279af4db11af4e55708064,
         type: 2}
+    - target: {fileID: 3056172911625708482, guid: ca383498faa196448b02ac8309f9b256,
+        type: 3}
+      propertyPath: weaponParent
+      value: 
+      objectReference: {fileID: 5995635240996584031}
     - target: {fileID: 3056172911625708482, guid: ca383498faa196448b02ac8309f9b256,
         type: 3}
       propertyPath: _attackFeedbacks

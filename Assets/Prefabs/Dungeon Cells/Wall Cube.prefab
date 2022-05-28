@@ -109,31 +109,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f220eb65712f4346a51b8e144add5e77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _data: {fileID: 11400000, guid: c2440e7f62eb58f42bf8f7b6223d13a2, type: 2}
-  skillsData: []
   _unitName: unit
   _unitDesc: description
-  _health: 100
-  _mana: 100
-  _exp: 0
-  _level: 1
-  _strength: 0
-  _intelligence: 0
-  _agility: 0
-  _luck: 0
+  _spriteRenderer: {fileID: 0}
   _currentDirection: 0
   _initialCell: {x: 0, y: 0, z: 0}
   _currentCell: {x: 0, y: 0, z: 0}
   _centerOffset: {x: 0, y: 0, z: 0}
-  _speed: 4
-  _turnSpeed: 4
-  _alive: 0
-  _fighting: 0
-  _exploring: 0
-  _spawned: 0
-  _stunned: 0
-  _poisoned: 0
-  _confused: 0
-  _rage: 0
-  _frozen: 0
-  _deathVFX: {fileID: 0}

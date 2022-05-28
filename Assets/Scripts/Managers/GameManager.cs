@@ -26,14 +26,15 @@ using State = Base_Classes.State;
 public class GameManager : MonoBehaviour
 {
     //Game State
-    private State state;
-    public enum turnState
+    //private State state;
+    public enum TurnState
     {
         Player,
-        Enemy
+        Enemy,
+        Interacting
     }
 
-    public turnState activeTurn;
+    public TurnState activeTurn;
     public int turnCounter;
     //[SerializeField] private int maxHeight = 25;
     //[SerializeField] private int maxWidth = 25;
@@ -123,14 +124,13 @@ public class GameManager : MonoBehaviour
     private void ManageTurns()
     {
         if (!playerSpawned) return;
-        if (!player._alive) return;
         switch (activeTurn)
         {
-            case turnState.Player:
+            case TurnState.Player:
                 if (!(player.ActionPoints > 0 && !_unitMoving)) break;
                 _movementGrid.GetMovementInput();
                 break;
-            case turnState.Enemy:
+            case TurnState.Enemy:
                 if (_unitMoving) break;
                 foreach (var enemy in enemies)
                 {
@@ -153,7 +153,7 @@ public class GameManager : MonoBehaviour
 
     void StartGame()
     {
-        activeTurn = turnState.Player;
+        activeTurn = TurnState.Player;
         playerSpawned = false;
         StartCoroutine(nameof(InitializeLevel));
         SetState(new Exploring(this));
@@ -317,13 +317,13 @@ public class GameManager : MonoBehaviour
     {
         switch (activeTurn)
         {
-            case turnState.Player:
+            case TurnState.Player:
             {
                 player.ActionPoints -= 1;
                 if (player.ActionPoints <= 0)
                 {
                     uiManager.LogAction.Invoke("Enemy turn");
-                    activeTurn = turnState.Enemy;
+                    activeTurn = TurnState.Enemy;
                     turnCounter++;
                 }
                 //StartCoroutine(TurnDelay());
@@ -331,12 +331,12 @@ public class GameManager : MonoBehaviour
                 break;
             }
 
-            case turnState.Enemy:
+            case TurnState.Enemy:
             {
                 player.ActionPoints = player._agility;
                 //Debug.Log("Player turn");
                 //uiManager.LogAction.Invoke("Player turn");
-                activeTurn = turnState.Player;
+                activeTurn = TurnState.Player;
                 //StartCoroutine(TurnDelay());
                 newTurn.Invoke();
                 break;
@@ -358,14 +358,14 @@ public class GameManager : MonoBehaviour
 
     public void SetState(State newState)
     {
-        state = newState;
-        StartCoroutine(state.Enter());
+        //state = newState;
+        //StartCoroutine(state.Enter());
     }
 
-    public State GetState()
-    {
-        return state;
-    }
+    //public State GetState()
+    //{
+        //return state;
+    //}
     public Player GetPlayer()
     {
         return player;

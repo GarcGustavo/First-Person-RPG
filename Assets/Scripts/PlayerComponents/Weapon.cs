@@ -30,15 +30,18 @@ namespace PlayerComponents
 		private void PickUp(GridCell cell)
 		{
 			if (cell.gridPosition != _currentCell) return;
-			var currentWeapon = _manager.GetPlayer().ActiveWeapon;
+			var currentWeapon = _manager.GetPlayer().activeWeapon;
 			if (currentWeapon != null)
 			{
 				//implement throw weapon function to unequip old weapon and remove from parent
 				//_manager.GetPlayer().ActiveWeapon.throwWeapon();
 			}
 
-			transform.SetParent(_manager.GetPlayer().WeaponParent);
-			_manager.GetPlayer().ActiveWeapon = this;
+			var rotator = GetComponent<ObjectRotator>();
+			rotator.StopRotation();
+
+			transform.SetParent(_manager.GetPlayer().weaponParent);
+			_manager.GetPlayer().activeWeapon = this;
 			//_manager.GetPlayer().weapon = _weaponData;
 			_uiManager.UpdateWeapon(weaponHUD);
 			_worldDisplay.sprite = null;
@@ -48,6 +51,7 @@ namespace PlayerComponents
 		{
 			var player = _manager.GetPlayer();
 			var damage = _weaponData.dmg;
+			_attackFeedbacks?.PlayFeedbacks();
 			// Bit shift the index of the layer (8) to get a bit mask
 			//Collide against any layer other than layer 8
 			var layerMask = 1 << 8;
@@ -58,7 +62,7 @@ namespace PlayerComponents
 			// Does the ray intersect any objects excluding the player layer
 			if (Physics.Raycast(transform.position, forwardDirection, out hit, range, layerMask))
 			{
-				Debug.DrawRay(transform.position, forwardDirection * hit.distance, Color.yellow);
+				Debug.DrawRay(player.transform.position, forwardDirection * hit.distance, Color.green);
 				Debug.Log("Did Hit");
 
 				//TODO if hit tag is enemy or other valid target get its position in grid space
@@ -90,9 +94,10 @@ namespace PlayerComponents
 					break;
 			}
 
-			if (Random.Range(0, 100) < player._luck) damage *= 2;
+			if (Random.Range(0, 100) < player._luck) 
+				damage *= 2;
 			//Instantiate(particles, _cam.transform);
-			_attackFeedbacks?.PlayFeedbacks();
+			//_attackFeedbacks?.PlayFeedbacks();
 			_manager.unitDamage.Invoke(target, damage);
 			Debug.Log("Attacking with: " + _weaponData.name);
 		}

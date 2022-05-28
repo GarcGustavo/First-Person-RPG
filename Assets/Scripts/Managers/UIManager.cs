@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using DG.Tweening;
 using PlayerComponents;
 using Scriptable_Objects;
 using TMPro;
@@ -22,11 +23,11 @@ public class UIManager : MonoBehaviour
 	[SerializeField] private GameObject gameOver;
 	[SerializeField] private CanvasRenderer damageFlash;
 	[SerializeField] private Transform skillsPanel;
+	[SerializeField] private Sprite defaultHUD;
 	[SerializeField] private Image weaponDisplay;
-	private GameManager manager;
-	private Player player;
-	//private PlayerData playerData;
-	private int turn;
+	private GameManager _manager;
+	private Player _player;
+	private int _turn;
 	
 	//public UnityEvent newTurn;
 	//public UnityEvent playerMoved;
@@ -55,17 +56,17 @@ public class UIManager : MonoBehaviour
 	}
 	private void Start()
 	{
-		manager = GameManager.GetInstance();
+		_manager = GameManager.GetInstance();
 		
 		
 		//manager.newTurn ??= new UnityEvent();
 		//manager.playerMoved ??= new UnityEvent();
 		//manager.playerMoved.AddListener(UpdateCell);
-		manager.enemyTurn.AddListener(UpdateTurnCounter);
-		manager.newTurn.AddListener(UpdateHealth);
-		manager.newTurn.AddListener(UpdateMana);
-		manager.newTurn.AddListener(UpdateAP);
-		manager.playerDeath.AddListener(GameOverScreen);
+		_manager.enemyTurn.AddListener(UpdateTurnCounter);
+		_manager.newTurn.AddListener(UpdateHealth);
+		_manager.newTurn.AddListener(UpdateMana);
+		_manager.newTurn.AddListener(UpdateAP);
+		_manager.playerDeath.AddListener(GameOverScreen);
 		//manager.playerAttack.AddListener(PlayerAttack);
 		//damage.AddListener(UpdateHealth);
 		//heal.AddListener(UpdateHealth);
@@ -76,7 +77,7 @@ public class UIManager : MonoBehaviour
 	{
 		gameOver.SetActive(false);
 		damageFlash.SetAlpha(0f);
-		weaponDisplay.canvasRenderer.SetAlpha(0f);
+		//weaponDisplay.canvasRenderer.SetAlpha(0f);
 	}
 	public void PlayerAttack()
 	{
@@ -85,52 +86,45 @@ public class UIManager : MonoBehaviour
 
 	public void UpdateCell()
 	{
-		player = manager.GetPlayer();
-		if (player != null) currentCell.text = "Cell: (" 
-		                                       + player._currentCell.x + ", " 
-		                                       + player._currentCell.y + ")";
+		_player = _manager.GetPlayer();
+		if (_player != null) currentCell.text = "Cell: (" 
+		                                       + _player._currentCell.x + ", " 
+		                                       + _player._currentCell.y + ")";
 	}
 
 	void UpdateTurnCounter()
 	{
-		turn = manager.GetTurn();
-		turnCounter.text = "Turn: " + turn;//.ToString();
+		_turn = _manager.GetTurn();
+		turnCounter.text = "Turn: " + _turn;//.ToString();
 	}
 	
 	void UpdateAP()
 	{
-		  ap.text = "AP: " + player.ActionPoints;//.ToString();
+		  ap.text = "AP: " + _player.ActionPoints;//.ToString();
 	}
 
 	void UpdateHealth()
 	{
-		player = manager.GetPlayer();
-		if (player != null) hp.text = "HP: " + player._health;
+		_player = _manager.GetPlayer();
+		if (_player != null) hp.text = "HP: " + _player._health;
 	}
 
 	void UpdateMana()
 	{
-		player = manager.GetPlayer();
-		if (player != null) mp.text = "MP: " + player._mana;
+		_player = _manager.GetPlayer();
+		if (_player != null) mp.text = "MP: " + _player._mana;
 	}
 
 	public void UpdateWeapon(Sprite weaponHUD)
 	{
-		//weaponDisplay = weaponHUD;
-		if (player.weapon != null)
-		{
-			weaponDisplay.sprite = weaponHUD;
-			weaponDisplay.canvasRenderer.SetAlpha(1f);
-		}
-		else
-		{
-			weaponDisplay.canvasRenderer.SetAlpha(0f);
-		}
+		weaponDisplay.transform.DOMoveY(130,.5f,false);
+		weaponDisplay.sprite = (weaponHUD != null)? weaponHUD : defaultHUD;
+		weaponDisplay.canvasRenderer.SetAlpha(1f);
 	}
 
 	public void UpdateSkills()
 	{
-		foreach (var skill in manager.GetPlayerData().skills)
+		foreach (var skill in _manager.GetPlayerData().skills)
 		{
 			Instantiate(skill.display, skillsPanel);
 		}

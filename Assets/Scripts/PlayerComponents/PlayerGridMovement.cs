@@ -122,7 +122,7 @@ namespace PlayerComponents
             if (!_isMoving) yield break;
             
             _playerUIManager.LogAction.Invoke("Attacked cell " + attackTargetCell.x + ", " + attackTargetCell.y);
-            _player.ActiveWeapon?.Attack(attackTargetCell);
+            _player.activeWeapon?.Attack(attackTargetCell);
             _playerManager.UpdateTurn();
             yield return new WaitForSeconds(_playerManager._turnCD);
             _isMoving = false;

@@ -109,11 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a1311d2a31f424e84d87ef0d7d68052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  occupant: {fileID: 0}
   gridPosition: {x: 0, y: 0, z: 0}
-  hasUnit: 0
+  occupant: {fileID: 0}
   blocked: 0
   trapped: 0
-  playerSpawn: 0
-  enemySpawn: 0
-  exit: 0

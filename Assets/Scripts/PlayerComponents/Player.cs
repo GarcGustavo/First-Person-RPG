@@ -51,9 +51,11 @@ namespace PlayerComponents
         private const float _turnSpeed = 4f;
 
         private Camera _cam;
+        public Weapon activeWeapon;
+        public Transform weaponParent;
         
-        public Weapon ActiveWeapon { get; set; }
-        public Transform WeaponParent { get; set; }
+        //public Weapon ActiveWeapon { get; set; }
+        //public Transform WeaponParent { get; set; }
         public int ActionPoints { get; set; }
         private void Start()
         {
@@ -98,8 +100,9 @@ namespace PlayerComponents
             _frozen = false;
             _cam = Camera.main;
             _particles = GetComponentInChildren<ParticleSystem>();
-            ActiveWeapon = null;
+            activeWeapon = null;
             ActionPoints = _agility;
+            _uiManager.UpdateWeapon(null);
         }
         
         private void CastSkill(Vector3Int target, SkillData skill)
